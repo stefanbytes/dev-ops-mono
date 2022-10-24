@@ -36,4 +36,4 @@ timeout: 3600s
 options:
   substitutionOption: "ALLOW_LOOSE"
   machineType: "N1_HIGHCPU_8"
-tags: ["graphql", "backend"]
+tags: ["dev-ops", "backend"]
