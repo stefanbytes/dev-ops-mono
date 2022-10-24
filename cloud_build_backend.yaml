@@ -55,24 +55,10 @@ steps:
     args:
       - "-c"
       - |
-        for d in apps/*; do
-          config="dist/${d}/cloud_build.yaml"
-        echo d value is:
-        echo ${d}
-        echo config value is:
-        echo ${config}
-        echo [ ! -f "${config}" || "${d}" == "apps/client" ]
-          if [[ ! -f "${config}" || "${d}" == "apps/client" ]]; then
-            continue
-          fi
-          (
-            gcloud builds submit ${d} \
-              --machine-type="N1_HIGHCPU_8" \
-              --config=${config} \
-              --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
-          ) &
-        done
-        wait
+        gcloud builds submit apps/api/ \
+          --machine-type="N1_HIGHCPU_8" \
+          --config="dist/apps/api/cloud_build.yaml" \
+          --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
       - "_COMMIT_SHA=${COMMIT_SHA}"
       - "_ENVIRONMENT=${_ENVIRONMENT}"
