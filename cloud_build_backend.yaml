@@ -55,7 +55,6 @@ steps:
     env:
       - "_COMMIT_SHA=${COMMIT_SHA}"
       - "_ENVIRONMENT=${_ENVIRONMENT}"
-
     waitFor: [ "set_stop_previous_version", "build-api", "docker-api", "package-api", "npm-install" ]
     id: "build_monorepo"
 
