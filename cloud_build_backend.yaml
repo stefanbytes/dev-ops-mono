@@ -22,26 +22,26 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args: [ "-c", "ls -al" ]
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "test", "api" ]
-    waitFor: "npm-install"
+    waitFor: [ "npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "build", "api", "--prod" ]
     id: "build-api"
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "server:docker" ]
     id: "docker-api"
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "server:package" ]
     id: "package-api"
-    waitFor: "npm-install"
+    waitFor: [ "npm-install"]
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"

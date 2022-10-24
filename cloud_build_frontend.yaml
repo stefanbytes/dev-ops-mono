@@ -1,10 +1,5 @@
 steps:
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ["config", "set", "app/stop_previous_version", "True"]
-    waitFor: ["set_cloud_build_timeout"]
-    id: "set_stop_previous_version"
-
-  - name: "gcr.io/cloud-builders/gcloud"
     args: [ "config", "set", "app/cloud_build_timeout", "3600" ]
     id: "set_cloud_build_timeout"
 
@@ -27,26 +22,26 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args: [ "-c", "ls -al" ]
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "test", "client" ]
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "build", "--prod" ]
     id: "build-client"
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:docker" ]
     id: "docker-client"
-    waitFor: "npm-install"
+    waitFor: ["npm-install"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:package" ]
     id: "package-client"
-    waitFor: "npm-install"
+    waitFor: [ "npm-install"]
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
