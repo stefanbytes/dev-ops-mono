@@ -45,22 +45,10 @@ steps:
     args:
       - "-c"
       - |
-        for d in apps/*; do
-          echo ${d}
-          config="dist/${d}/cloud_build.yaml"
-          echo ${config}
-          if [[ ! -f "${config}" || "${d}" == "apps/client" ]]; then
-            continue
-          fi
-
-          (
-            gcloud builds submit ${d} \
+            gcloud builds submit dist/apps/api \
               --machine-type="N1_HIGHCPU_8" \
-              --config=${config} \
+              --config="dist/apps/api/cloud_build.yaml" \
               --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
-          ) &
-        done
-        wait
     env:
       - "_TEST=${_TEST}"
 
