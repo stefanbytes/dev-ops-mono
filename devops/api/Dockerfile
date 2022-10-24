@@ -12,9 +12,7 @@ RUN install_node v14.19.0
 RUN npm install -g npm
 RUN npm cache verify
 
-
 COPY package*.json ./
-COPY package-lock.json /app/package-lock.json
 
 RUN npm install
 

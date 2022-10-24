@@ -36,12 +36,12 @@ steps:
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:docker" ]
     id: "docker-client"
-    waitFor: ["npm-install"]
+    waitFor: ["npm-install", "build-client"]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:package" ]
     id: "package-client"
-    waitFor: [ "npm-install"]
+    waitFor: [ "npm-install", "build-client"]
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -50,7 +50,7 @@ steps:
       - |
         gcloud builds submit apps/client/ \
           --machine-type="N1_HIGHCPU_32" \
-          --config="dist/apps/client/cloud_build.yaml" \
+          --config="./dist/apps/client/cloud_build.yaml" \
           --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
       - "_AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID}"

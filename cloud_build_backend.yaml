@@ -43,13 +43,6 @@ steps:
     id: "package-api"
     waitFor: [ "npm-install", "build-api"]
 
-
-  - name: "gcr.io/cloud-builders/docker"
-    entrypoint: "bash"
-    args: [ "-c", "ls -la ./dist/apps/api/", "-c", "ls -la .dist/apps/" ]
-    waitFor: [ "npm-install", "build-api", "docker-api", "package-api" ]
-
-
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args:

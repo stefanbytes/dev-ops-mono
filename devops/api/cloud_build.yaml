@@ -11,11 +11,11 @@ steps:
       [
         "build",
         "-t",
-        "gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}:${_COMMIT_SHA}",
+        "gcr.io/fanbytes/devops-api/${_ENVIRONMENT}:${_COMMIT_SHA}",
         "-t",
-        "gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}:latest",
+        "gcr.io/fanbytes/devops-api/${_ENVIRONMENT}:latest",
         "--cache-from",
-        "gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}:latest",
+        "gcr.io/fanbytes/devops-api/${_ENVIRONMENT}:latest",
         ".",
       ]
 
