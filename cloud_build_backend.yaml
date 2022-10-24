@@ -46,7 +46,7 @@ steps:
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
-    args: [ "-c", "ls -al" ]
+    args: [ "-c", "ls -la ./dist/apps/api/" ]
     waitFor: [ "npm-install", "build-api", "docker-api", "package-api" ]
 
 
@@ -57,7 +57,7 @@ steps:
       - |
         gcloud builds submit apps/api/ \
           --machine-type="N1_HIGHCPU_8" \
-          --config="dist/apps/api/cloud_build.yaml" \
+          --config="./dist/apps/api/cloud_build.yaml" \
           --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
       - "_COMMIT_SHA=${COMMIT_SHA}"
