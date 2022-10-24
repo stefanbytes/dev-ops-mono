@@ -48,7 +48,7 @@ steps:
     args:
       - "-c"
       - |
-        gcloud builds submit apps/api/ \
+        gcloud builds submit dist/apps/api/ \
           --machine-type="N1_HIGHCPU_8" \
           --config="./dist/apps/api/cloud_build.yaml" \
           --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
