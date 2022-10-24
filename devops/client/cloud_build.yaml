@@ -17,6 +17,8 @@ steps:
         "--cache-from",
         "gcr.io/fanbytes/devops-client/${_NODE_ENV}:latest",
         "--build-arg",
+        "NODE_ENV=${_NODE_ENV}",
+        "--build-arg",
         ".",
       ]
 
