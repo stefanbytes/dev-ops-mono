@@ -8,7 +8,7 @@ WORKDIR /app
 
 RUN printenv > .env
 
-RUN install_node v14
+RUN install_node v14.19.0
 
 RUN npm install -g npm
 RUN npm cache verify
