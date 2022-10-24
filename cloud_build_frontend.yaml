@@ -22,25 +22,31 @@ steps:
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "install" ]
+    id: "npm-install"
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args: [ "-c", "ls -al" ]
+    waitFor: "npm-install"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "test", "client" ]
+    waitFor: "npm-install"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "build", "--prod" ]
     id: "build-client"
+    waitFor: "npm-install"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:docker" ]
     id: "docker-client"
+    waitFor: "npm-install"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
     args: [ "run-script", "client:package" ]
     id: "package-client"
+    waitFor: "npm-install"
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
@@ -56,7 +62,7 @@ steps:
       - "_NODE_ENV=${_NODE_ENV}"
       - "_COMMIT_SHA=${COMMIT_SHA}"
 
-    waitFor: ["set_stop_previous_version"]
+    waitFor: [ "set_stop_previous_version", "build-client", "docker-client", "package-client", "npm-install" ]
     id: "build_monorepo"
 
 
