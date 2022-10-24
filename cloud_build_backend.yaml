@@ -38,7 +38,9 @@ steps:
   - name: 'gcr.io/fanbytes/nrwl_builder'
     args: ['run-script', 'prebuild:package']
 
-
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'ls -al']
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
