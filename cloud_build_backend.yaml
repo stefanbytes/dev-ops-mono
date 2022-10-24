@@ -45,7 +45,7 @@ steps:
     args:
       - "-c"
       - |
-        for d in */apps/*; do
+        for d in */; do
           echo ${d}
           config="dist/apps/${d}gcp-build/cloud_build.yaml"
           echo ${config}
