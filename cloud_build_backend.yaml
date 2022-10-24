@@ -46,8 +46,10 @@ steps:
       - "-c"
       - |
         for d in */; do
+          echo ${d}
           config="dist/apps/${d}gcp-build/cloud_build.yaml"
           if [[ ! -f "${config}" || "${d}" == "apps/api/client/" ]]; then
+            ls -la
             continue
           fi
 
