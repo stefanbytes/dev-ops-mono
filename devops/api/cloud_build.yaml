@@ -4,7 +4,7 @@ steps:
 
   - name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
-    args: ["-c", "docker pull gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}:latest || exit 0"]
+    args: ["-c", "docker pull gcr.io/fanbytes/devops-api/${_ENVIRONMENT}:latest || exit 0"]
 
   - name: "gcr.io/cloud-builders/docker"
     args:
@@ -20,7 +20,7 @@ steps:
       ]
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["push", "--all-tags", "gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}"]
+    args: ["push", "--all-tags", "gcr.io/fanbytes/devops-api/${_ENVIRONMENT}"]
 
   - name: "gcr.io/cloud-builders/gcloud"
     args:
@@ -29,11 +29,11 @@ steps:
         "deploy",
         "app.${_ENVIRONMENT}.yaml",
         "--image-url",
-        "gcr.io/fanbytes/dev-ops-api/${_ENVIRONMENT}:${_COMMIT_SHA}",
+        "gcr.io/fanbytes/devops-api/${_ENVIRONMENT}:${_COMMIT_SHA}",
       ]
 
 timeout: 3600s
 options:
   substitutionOption: "ALLOW_LOOSE"
   machineType: "N1_HIGHCPU_8"
-tags: ["dev-ops", "backend"]
+tags: ["devops", "backend"]
