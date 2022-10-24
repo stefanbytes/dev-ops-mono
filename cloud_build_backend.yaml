@@ -58,7 +58,7 @@ steps:
               --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
       - "_TEST=${_TEST}"
-      - "_COMMIT_SHA=${_COMMIT_SHA}"
+      - "_COMMIT_SHA=${COMMIT_SHA}"
       - "_ENVIRONMENT=${_ENVIRONMENT}"
 
     waitFor: ["set_stop_previous_version", "build-client", 'build-api', 'prebuild-docker-api', 'prebuild-package-api']
