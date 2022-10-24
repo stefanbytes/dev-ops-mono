@@ -61,10 +61,10 @@ steps:
         echo ${d}
         echo config value is:
         echo ${config}
-          if [[ ! -f "${config}" || "${d}" == "client/" ]]; then
+        echo [ ! -f "${config}" || "${d}" == "apps/client" ]
+          if [[ ! -f "${config}" || "${d}" == "apps/client" ]]; then
             continue
           fi
-
           (
             gcloud builds submit ${d} \
               --machine-type="N1_HIGHCPU_8" \
