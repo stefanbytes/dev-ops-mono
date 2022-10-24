@@ -42,21 +42,21 @@ steps:
     entrypoint: 'bash'
     args: ['-c', 'ls -al']
 
-  - name: "gcr.io/cloud-builders/gcloud"
-    entrypoint: "bash"
-    args:
-      - "-c"
-      - |
-            ls -la
-            gcloud builds submit dist/apps/api \
-              --machine-type="N1_HIGHCPU_8" \
-              --config="dist/apps/api/cloud_build.yaml" \
-              --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
-    env:
-      - "_TEST=${_TEST}"
-
-    waitFor: ["set_stop_previous_version"]
-    id: "build_monorepo"
+#  - name: "gcr.io/cloud-builders/gcloud"
+#    entrypoint: "bash"
+#    args:
+#      - "-c"
+#      - |
+#            ls -la
+#            gcloud builds submit dist/apps/api \
+#              --machine-type="N1_HIGHCPU_8" \
+#              --config="dist/apps/api/cloud_build.yaml" \
+#              --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
+#    env:
+#      - "_TEST=${_TEST}"
+#
+#    waitFor: ["set_stop_previous_version"]
+#    id: "build_monorepo"
 
 timeout: 3600s
 options:
