@@ -19,7 +19,8 @@
         "assets": ["apps/client/src/favicon.ico", "apps/client/src/assets"],
         "styles": [],
         "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "@nrwl/react/plugins/webpack",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {
@@ -49,7 +50,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "client:build",
-        "hmr": true
+        "hmr": true,
+        "proxyConfig": "apps/client/proxy.conf.json"
       },
       "configurations": {
         "development": {

@@ -1,0 +1,71 @@
+steps:
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["config", "set", "app/cloud_build_timeout", "3600"]
+    id: "set_cloud_build_timeout"
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["config", "set", "app/stop_previous_version", "True"]
+    waitFor: ["set_cloud_build_timeout"]
+    id: "set_stop_previous_version"
+
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+      dir: 'build_tools/nrwl'
+      args: ['build', '-t', 'gcr.io/fanbytes/nrwl_builder', '.']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/fanbytes/nrwl_builder:latest']
+
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['install']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'ls -al']
+
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['run-script', 'test', 'api']
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+  args: ['run-script', 'test', 'client']
+
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['run-script', 'build', '--prod']
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['run-script', 'build', 'api', '--prod']
+
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['run-script', 'prebuild:docker']
+  - name: 'gcr.io/fanbytes/nrwl_builder'
+    args: ['run-script', 'prebuild:package']
+
+
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        for d in */; do
+          config="dist/apps/${d}gcp-build/cloud_build.yaml"
+          if [[ ! -f "${config}" || "${d}" == "apps/api/client/" ]]; then
+            continue
+          fi
+
+          (
+            gcloud builds submit ${d} \
+              --machine-type="N1_HIGHCPU_8" \
+              --config=${config} \
+              --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
+          ) &
+        done
+        wait
+    env:
+      - "_TEST=${_TEST}"
+
+    waitFor: ["set_stop_previous_version"]
+    id: "build_monorepo"
+
+timeout: 3600s
+options:
+  substitutionOption: "ALLOW_LOOSE"
+tags: ["monorepo_backend"]

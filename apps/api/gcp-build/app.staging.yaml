@@ -1,0 +1,13 @@
+runtime: custom
+env: flex
+service: graphql-staging
+
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 2
+  disk_size_gb: 20
+
+beta_settings:
+  cloud_sql_instances: fanbytes:us-central1:dev-ops
