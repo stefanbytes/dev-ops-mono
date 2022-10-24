@@ -48,12 +48,11 @@ steps:
     args:
       - "-c"
       - |
-        gcloud builds submit apps/client/ \
+        gcloud builds submit dist/apps/client/ \
           --machine-type="N1_HIGHCPU_32" \
           --config="./dist/apps/client/cloud_build.yaml" \
           --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
-      - "_AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID}"
       - "_NODE_ENV=${_NODE_ENV}"
       - "_COMMIT_SHA=${COMMIT_SHA}"
 

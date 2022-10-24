@@ -11,11 +11,11 @@ steps:
       [
         "build",
         "-t",
-        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:${_COMMIT_SHA}",
+        "gcr.io/fanbytes/devops-client/${_NODE_ENV}:${_COMMIT_SHA}",
         "-t",
-        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:latest",
+        "gcr.io/fanbytes/devops-client/${_NODE_ENV}:latest",
         "--cache-from",
-        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:latest",
+        "gcr.io/fanbytes/devops-client/${_NODE_ENV}:latest",
         "--build-arg",
         "NODE_ENV=${_NODE_ENV}",
         "--build-arg",
@@ -32,7 +32,7 @@ steps:
         "deploy",
         "app.${_NODE_ENV}.yaml",
         "--image-url",
-        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:${_COMMIT_SHA}",
+        "gcr.io/fanbytes/devops-client/${_NODE_ENV}:${_COMMIT_SHA}",
       ]
 
 timeout: 3600s
