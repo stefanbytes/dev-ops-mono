@@ -1,5 +1,10 @@
 steps:
   - name: "gcr.io/cloud-builders/gcloud"
+    args: ["config", "set", "app/stop_previous_version", "True"]
+    waitFor: ["set_cloud_build_timeout"]
+    id: "set_stop_previous_version"
+
+  - name: "gcr.io/cloud-builders/gcloud"
     args: [ "config", "set", "app/cloud_build_timeout", "3600" ]
     id: "set_cloud_build_timeout"
 
@@ -23,47 +28,39 @@ steps:
     args: [ "-c", "ls -al" ]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
-    args: [ "run-script", "test", "api" ]
+    args: [ "run-script", "test", "client" ]
 
   - name: "gcr.io/fanbytes/nrwl_builder"
-    args: [ "run-script", "build", "api", "--prod" ]
-    id: "build-api"
+    args: [ "run-script", "build", "--prod" ]
+    id: "build-client"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
-    args: [ "run-script", "server:docker" ]
-    id: "docker-api"
+    args: [ "run-script", "client:docker" ]
+    id: "docker-client"
 
   - name: "gcr.io/fanbytes/nrwl_builder"
-    args: [ "run-script", "server:package" ]
-    id: "package-api"
+    args: [ "run-script", "client:package" ]
+    id: "package-client"
 
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args:
       - "-c"
       - |
-        for d in apps/*; do
-          config="dist/${d}/cloud_build.yaml"
-          if [[ ! -f "${config}" || "${d}" == "client/" ]]; then
-            continue
-          fi
-
-          (
-            gcloud builds submit ${d} \
-              --machine-type="N1_HIGHCPU_8" \
-              --config=${config} \
-              --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
-          ) &
-        done
-        wait
+        gcloud builds submit apps/client/ \
+          --machine-type="N1_HIGHCPU_32" \
+          --config="dist/apps/client/cloud_build.yaml" \
+          --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
+      - "_AWS_ACCESS_KEY_ID=${_AWS_ACCESS_KEY_ID}"
+      - "_NODE_ENV=${_NODE_ENV}"
       - "_COMMIT_SHA=${COMMIT_SHA}"
-      - "_ENVIRONMENT=${_ENVIRONMENT}"
 
-    waitFor: [ "set_stop_previous_version", "build-api", "docker-api", "package-api" ]
+    waitFor: ["set_stop_previous_version"]
     id: "build_monorepo"
+
 
 timeout: 3600s
 options:
   substitutionOption: "ALLOW_LOOSE"
-tags: [ "devops_monorepo_backend" ]
+tags: ["devops_monorepo_frontend"]

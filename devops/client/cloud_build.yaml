@@ -1,0 +1,42 @@
+steps:
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["config", "set", "app/cloud_build_timeout", "3600"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args: ["-c", "docker pull gcr.io/fanbytes/client/${_NODE_ENV}:latest || exit 0"]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:${_COMMIT_SHA}",
+        "-t",
+        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:latest",
+        "--cache-from",
+        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:latest",
+        "--build-arg",
+        "NODE_ENV=${_NODE_ENV}",
+        "--build-arg",
+        ".",
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "--all-tags", "gcr.io/fanbytes/client/${_NODE_ENV}"]
+
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "app",
+        "deploy",
+        "app.${_NODE_ENV}.yaml",
+        "--image-url",
+        "gcr.io/fanbytes/dev-ops-client/${_NODE_ENV}:${_COMMIT_SHA}",
+      ]
+
+timeout: 3600s
+options:
+  substitutionOption: "ALLOW_LOOSE"
+  machineType: "N1_HIGHCPU_32"
+tags: ["react", "frontend"]

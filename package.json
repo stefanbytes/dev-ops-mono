@@ -6,8 +6,10 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "prebuild:package": "cpx package-lock.json dist/apps/api/ --verbose",
-    "prebuild:docker": "cpx ./apps/api/gcp-build/**/* dist/apps/api/ --verbose"
+    "server:package": "cpx package-lock.json dist/apps/api/ --verbose",
+    "server:docker": "cpx ./devops/api/**/* dist/apps/api/ --verbose",
+    "client:package": "cpx package-lock.json dist/apps/client/ --verbose",
+    "client:docker": "cpx ./devops/api/**/* dist/apps/client/ --verbose"
   },
   "private": true,
   "dependencies": {
