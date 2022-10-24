@@ -52,13 +52,14 @@ steps:
     args:
       - "-c"
       - |
-            ls -la
             gcloud builds submit dist/apps/api \
               --machine-type="N1_HIGHCPU_8" \
               --config="dist/apps/api/cloud_build.yaml" \
               --substitutions="`printenv | egrep '^_\w+' | tr '\n\r' ', '`"
     env:
       - "_TEST=${_TEST}"
+      - "_COMMIT_SHA=${COMMIT_SHA}"
+      - "_ENVIRONMENT=${_ENVIRONMENT}"
 
     waitFor: ["set_stop_previous_version", "build-client", 'build-api', 'prebuild-docker-api', 'prebuild-package-api']
     id: "build_monorepo"
