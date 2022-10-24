@@ -45,11 +45,11 @@ steps:
     args:
       - "-c"
       - |
-        for d in */; do
+        for d in apps/*; do
           echo ${d}
-          config="dist/apps/${d}gcp-build/cloud_build.yaml"
+          config="dist/${d}/cloud_build.yaml"
           echo ${config}
-          if [[ ! -f "${config}" || "${d}" == "apps/api/client/" ]]; then
+          if [[ ! -f "${config}" || "${d}" == "apps/client" ]]; then
             continue
           fi
 
