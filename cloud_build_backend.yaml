@@ -45,6 +45,7 @@ steps:
     args:
       - "-c"
       - |
+            ls -la
             gcloud builds submit dist/apps/api \
               --machine-type="N1_HIGHCPU_8" \
               --config="dist/apps/api/cloud_build.yaml" \
